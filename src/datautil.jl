@@ -1,5 +1,5 @@
 function getdata(filename, separator, colno)
-  return readdlm(filename, separator)[:,colno]
+  return map(Float64, readdlm(filename, separator)[:,colno])
 end
 
 function getdata(filename)

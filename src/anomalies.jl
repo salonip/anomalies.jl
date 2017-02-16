@@ -9,7 +9,7 @@ module anomalies
     getdata, getconnection, closeconnection, executequery,
 
   # core.jl
-    suddenpeaks
+    suddenpeaks, suddenfalls
 
   include("datautil.jl")
   include("core.jl")

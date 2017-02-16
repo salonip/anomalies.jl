@@ -1,17 +1,19 @@
 
-function suddenpeaks(timeserise)
+function suddenpeaks(timeserise, bias = 0)
   deriv = timeserise[1:end-1] .- timeserise[2:end]
   labelset = getlabel(deriv)
   xloc = findin(labelset, 3)
   trend = timeserise[xloc]
   lst = zeros(length(timeserise))
-  st = mean(trend) + (mean(trend) - std(trend))
-  for i = 1:length(xloc)
-    if timeserise[xloc[i]] > st
-      lst[xloc[i]] = 1
-    end
-  end
+  bias = mean(timeserise) * bias
+  st = mean(trend) + (mean(trend) - std(trend)) + bias
+  map(i -> lst[xloc[i]] = timeserise[xloc[i]] > st ? 1:0 ,collect(1:length(xloc)))
 
+  # for i = 1:length(xloc)
+  #   if timeserise[xloc[i]] > st
+  #     lst[xloc[i]] = 1
+  #   end
+  # end
 
   # mx, my = [], []
   # for i = 1:length(lst)
@@ -36,22 +38,25 @@ function suddenpeaks(timeserise)
 end
 
 # using anomalies
-# timeserise = getdata("/home/durjoysenmaitra/.julia/v0.5/anomalies.jl/all2/0102699000000143####CUSTOMER SERVICE TAX PAYMENT AXIS RTGS.txt", '|', 3)
+# timeserise = getdata("../data/trans", '\t', 1)
 # timeserise = timeserise .+ 200000
 # timeserise[10] = 10000
 
-function suddenfalls(timeserise)
+function suddenfalls(timeserise, bias = 0)
   deriv = timeserise[1:end-1] .- timeserise[2:end]
   labelset = getlabel(deriv)
   xloc = findin(labelset, 4)
   trend = timeserise[xloc]
   lst = zeros(length(timeserise))
-  st = mean(trend) - std(trend)
-  for i = 1:length(xloc)
-    if timeserise[xloc[i]] < st
-      lst[xloc[i]] = 1
-    end
-  end
+  bias = mean(trend)*bias
+  st = mean(trend) - std(trend) - bias
+  map(i -> lst[xloc[i]] = timeserise[xloc[i]] < st ? 1:0 ,collect(1:length(xloc)))
+  # for i = 1:length(xloc)
+  #   if timeserise[xloc[i]] < st
+  #     lst[xloc[i]] = 1
+  #   end
+  # end
+
   # mx, my = [], []
   # for i = 1:length(lst)
   #   if lst[i] == 1
